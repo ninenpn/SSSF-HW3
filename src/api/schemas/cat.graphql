@@ -5,3 +5,61 @@
 # LocationInput: type, coordinates
 # Query: catById, cats, catsByArea, catsByOwner
 # Mutation: createCat, updateCat, deleteCat
+scalar DateTime
+
+type Cat {
+  id: ID!
+  cat_name: String!
+  weight: Float!
+  birthdate: DateTime
+  owner: User
+  location: Location
+  filename: String
+}
+
+type Location {
+  type: GeoJSONPoint
+  coordinates: [Float]
+}
+
+enum GeoJSONPoint {
+  Point
+}
+
+input Coordinates {
+  lat: Float!
+  lng: Float!
+}
+
+input LocationInput {
+  type: GeoJSONPoint
+  coordinates: [Float]
+}
+
+type Query {
+  catById(id: ID!): Cat!
+  cats: [Cat!]!
+  catsByOwner(ownerId: ID!): [Cat!]!
+  catsByArea(topRight: Coordinates!, bottomLeft: Coordinates!): [Cat]
+}
+
+type Mutation {
+  createCat(
+    cat_name: String!
+    weight: Float!
+    birthdate: DateTime!
+    owner: ID!
+    location: LocationInput!
+    filename: String!
+  ): Cat
+  updateCat(
+    id: ID!
+    cat_name: String
+    weight: Float
+    birthdate: DateTime
+    owner: ID
+    location: LocationInput
+    filename: String
+  ): Cat
+  deleteCat(id: ID!): Cat
+}
